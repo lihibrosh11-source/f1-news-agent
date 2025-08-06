@@ -8,13 +8,14 @@ import os
 
 app = FastAPI()
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
 RSS_FEEDS = [
-  "https://news.google.com/rss/search?q=formula+1&hl=en-US&gl=US&ceid=US:en",
-  "https://www.motorsport.com/rss/f1/news/",
-  "https://www.autosport.com/rss/f1/all.xml",
-  "https://www.racingnews365.com/rss",
-  "https://www.planetf1.com/feed",
-  "https://www.skysports.com/rss/12040"
+    "https://news.google.com/rss/search?q=formula+1&hl=en-US&gl=US&ceid=US:en",
+    "https://www.motorsport.com/rss/f1/news/",
+    "https://www.autosport.com/rss/f1/all.xml",
+    "https://www.racingnews365.com/rss",
+    "https://www.planetf1.com/feed",
+    "https://www.skysports.com/rss/12040"
 ]
 
 def fetch_f1_news():
@@ -47,7 +48,6 @@ def summarize_with_gpt(headlines):
     except Exception as e:
         logging.error(f"OpenAI error: {e}")
         return "⚠️ Error fetching summary"
-
 
 @app.get("/f1-topics")
 def endpoint():
