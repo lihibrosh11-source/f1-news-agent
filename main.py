@@ -20,9 +20,12 @@ RSS_FEEDS = [
 def fetch_f1_news():
     headlines = []
     for url in RSS_FEEDS:
-        feed = feedparser.parse(url)
-        for ent in feed.entries[:3]:
-            headlines.append(ent.title)
+        try:
+            feed = feedparser.parse(url)
+            for ent in feed.entries[:3]:
+                headlines.append(ent.title)
+        except Exception as e:
+            print(f"Error reading {url}: {e}")
     return headlines[:10]
 
 def summarize_with_gpt(headlines):
@@ -47,4 +50,10 @@ def summarize_with_gpt(headlines):
 
 @app.get("/f1-topics")
 def endpoint():
-    return {"summary": summarize_with_gpt(fetch_f1_news())}
+    try:
+        headlines = fetch_f1_news()
+        summary = summarize_with_gpt(headlines)
+        return {"summary": summary}
+    except Exception as e:
+        print("Error:", e)
+        return {"summary": "⚠️ Error fetching summary"}
