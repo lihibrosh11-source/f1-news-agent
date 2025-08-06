@@ -48,12 +48,11 @@ def summarize_with_gpt(headlines):
         logging.error(f"OpenAI error: {e}")
         return "⚠️ Error fetching summary"
 
+
 @app.get("/f1-topics")
 def endpoint():
     try:
-        headlines = fetch_f1_news()
-        summary = summarize_with_gpt(headlines)
+        summary = summarize_with_gpt(fetch_f1_news())
         return {"summary": summary}
     except Exception as e:
-        print("Error:", e)
-        return {"summary": "⚠️ Error fetching summary"}
+        return {"summary": f"⚠️ Error: {str(e)}"}
