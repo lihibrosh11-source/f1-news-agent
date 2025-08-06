@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(level=logging.INFO)
+
 from fastapi import FastAPI
 import feedparser
 import openai
@@ -24,15 +27,23 @@ def fetch_f1_news():
 
 def summarize_with_gpt(headlines):
     prompt = (
-      "Summarize the top 10 trending F1 topics from these headlines:\n\n"
-      + "\n".join(f"- {hl}" for hl in headlines)
+        "Summarize the top 10 trending F1 topics from these headlines:\n\n"
+        + "\n".join(f"- {hl}" for hl in headlines)
     )
-    resp = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role":"user","content":prompt}],
-        temperature=0.7, max_tokens=600
-    )
-    return resp.choices[0].message['content']
+    print("Prompt being sent to GPT:")
+    print(prompt)
+
+    try:
+        resp = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=600
+        )
+        return resp.choices[0].message['content']
+    except Exception as e:
+        logging.error(f"OpenAI error: {e}")
+        return "⚠️ Error fetching summary"
 
 @app.get("/f1-topics")
 def endpoint():
