@@ -1,13 +1,13 @@
 import logging
+logging.basicConfig(level=logging.INFO)
+
 from fastapi import FastAPI
 import feedparser
 import openai
 import os
 
-logging.basicConfig(level=logging.INFO)
 app = FastAPI()
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
 RSS_FEEDS = [
   "https://news.google.com/rss/search?q=formula+1&hl=en-US&gl=US&ceid=US:en",
   "https://www.motorsport.com/rss/f1/news/",
@@ -47,6 +47,7 @@ def summarize_with_gpt(headlines):
     except Exception as e:
         logging.error(f"OpenAI error: {e}")
         return "⚠️ Error fetching summary"
+
 
 @app.get("/f1-topics")
 def endpoint():
